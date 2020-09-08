@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:mvc="http://www.springframework.org/schema/mvc"
+xmlns:p="http://www.springframework.org/schema/p"
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:aop="http://www.springframework.org/schema/aop"
+xmlns:tx="http://www.springframework.org/schema/tx"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-4.2.xsd
+http://www.springframework.org/schema/mvc
+http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+<!--
+    	使spring扫描包下的所有类，让标注spring注解的类生效 
+    	若扫描到有@Component @Controller@Service等这些注解的类，则把这些类注册为bean
+    -->
+    <context:component-scan base-package="com.etrans.service"/>
+    <context:component-scan base-package="com.etrans.dao"/>
+ 	<!-- 配置数据源 -->
+ 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+	  <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+	  <property name="url">
+	  	<value><![CDATA[jdbc:mysql://127.0.0.1:3306/smbms?useSSL=false&useUnicode=true&characterEncoding=utf-8]]></value>
+	  </property>
+	  <property name="username" value="root"/>
+	  <property name="password" value="1234"/>
+	</bean>
+
+ 	<!-- 配置SqlSessionFactoryBean -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	  	 <!-- 引入数据源 -->
+	  	 <property name="dataSource" ref="dataSource"/>
+	  	 <!-- 引入mybatis配置 -->
+	  	 <property name="configLocation" value="classpath:mybatis-config.xml"/>
+	  	 <!-- 配置Sql映射文件 -->
+	  	 <property name="mapperLocations">
+	  	 	<list>
+	  	 		<value>classpath:mapper/*Mapper.xml</value>
+	  	 	</list>
+	  	 </property>
+	</bean>
+	<!-- 使用MapperScannerConfigure配置 自动扫描dao接口，并自动添加bean配置 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+		<property name="basePackage" value="com.etrans.dao"/>
+	</bean>
+
+
+	<!--定义事务管理器-->
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<!--配置事务传播特性-->
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="find*" propagation="SUPPORTS"/>
+			<tx:method name="add*"/>
+			<tx:method name="upd*"/>
+			<tx:method name="del*"/>
+			<tx:method name="*"/>
+		</tx:attributes>
+	</tx:advice>
+
+	<!--配置面向切面-->
+	<aop:config>
+		<aop:pointcut id="Transactional" expression="execution(* service.*.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="Transactional"/>
+	</aop:config>
+
+	<!--把事务管理器交给spring容器-->
+	<tx:annotation-driven transaction-manager="txManager" proxy-target-class="true"/>
+
+</beans>

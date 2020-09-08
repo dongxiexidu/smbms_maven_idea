@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etrans.dao.UserMapper">
+  <!-- 定义userRoleMap映射 -->
+  <resultMap type="User" id="userRoleMap">
+  	<id column="id" property="id"/>
+  	<result column="userCode" property="userCode"/>
+  	<result column="userName" property="userName"/>
+  	<result column="gender" property="gender"/>
+  	<result column="birthday" property="birthday"/>
+  	<result column="phone" property="phone"/>
+  	<association property="role" column="userRole">
+  		<result column="roleName" property="roleName"/>
+  	</association>
+  </resultMap>
+  <!-- 根据用户的id删除记录 -->
+  <delete id="deleteUserById" parameterType="Integer">
+  	delete from smbms_user where id=#{id}
+  </delete>
+  <!-- 根据用户id获取用户信息 -->
+  <select id="getUserById" parameterType="Integer" resultType="User">
+  	select * from smbms_user where id=#{id}
+  </select>
+  <!-- 修改用户信息 -->
+  <update id="modifyUser" parameterType="User">
+   update smbms_user set userCode=#{userCode},
+   userName=#{userName},
+   gender =#{gender},
+   birthday=#{birthday},
+   phone=#{phone},
+   address=#{address},
+   userRole=#{userRole},
+   idPicPath=#{idPicPath},
+   workPicPath=#{workPicPath},
+   modifyBy=#{modifyBy},
+   modifyDate=#{modifyDate}
+
+   where id=#{id}
+  </update>
+  <!--修改密码  -->
+  <update id="modifyPasswd">
+  	update smbms_user set userPassword=#{newPassword} 
+  	where userCode=#{userCode} and userPassword=#{userPassword} 
+  </update>
+  <select id="checkLogin" resultType="User">
+  	select * from smbms_user where userCode=#{userCode} and userPassword=#{userPassword}
+  </select>
+  <select id="getUserList" resultMap="userRoleMap">
+  	select u.*,r.roleName from smbms_user u
+  	left join smbms_role r on u.userRole=r.id
+  	 where u.userName like CONCAT("%",#{userName},"%") and r.roleName like CONCAT("%",#{roleName},"%")
+  	 limit #{start},#{numbers}
+  </select>
+  <select id="getUserCount" parameterType="String" resultType="Integer">
+  	select count(*) from smbms_user u
+  	left join smbms_role r on u.userRole=r.id
+  	 where u.userName like CONCAT("%",#{userName},"%") and r.roleName like CONCAT("%",#{roleName},"%")
+  </select>
+  <!-- 添加用户 -->
+<insert id="addUser" parameterType="User">
+	insert into smbms_user(userCode,userName,userPassword,gender,birthday,phone,address,userRole,createdBy,idPicPath,workPicPath)
+	 values(#{userCode},#{userName},#{userPassword},#{gender},#{birthday},#{phone},#{address},#{userRole},#{createdBy},#{idPicPath},#{workPicPath})
+</insert>
+</mapper>

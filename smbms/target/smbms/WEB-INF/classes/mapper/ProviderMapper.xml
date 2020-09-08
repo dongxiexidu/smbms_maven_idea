@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etrans.dao.ProviderMapper">
+	<!-- 根据供应商名模糊查询供应商列表 -->
+	<select id="getProviderList" resultType="Provider">
+		select * from smbms_provider where proName like CONCAT("%",#{proName},"%")
+		limit #{pageIndex},#{pageSize};
+	</select>
+	<!-- 获取供应商记录数 -->
+	<select id="getProviderCount"  parameterType="String" resultType="Integer">
+		select count(*) from smbms_provider where proName like CONCAT("%",#{proName},"%");
+	</select>
+	<!-- 添加供应商 -->
+	<insert id="providerAdd" parameterType="Provider">
+		insert into smbms_provider(proCode,proName,proDesc,proContact,proPhone,proAddress,proFax,createdBy)
+		values(#{proCode},#{proName},#{proDesc},#{proContact},#{proPhone},#{proAddress},#{proFax},#{createdBy})
+	</insert>
+	<!-- 根据供应商id删除记录 -->
+	<delete id="deleteProviderById" parameterType="Integer">
+		delete from smbms_provider where id=#{id}
+	</delete>
+	<!-- 根据供应商id获取供应商信息 -->
+	<select id="getProvider" parameterType="Integer" resultType="Provider">
+		select * from smbms_provider where id=#{id}
+	</select>
+	<!-- 修改供应商信息 -->
+	<update id="modifyProvider" parameterType="Provider">
+		update smbms_provider set proCode=#{proCode},
+	 proName=#{proName},
+	 proDesc =#{proDesc},
+	 proContact=#{proContact},
+	 proPhone=#{proPhone},
+	 proAddress=#{proAddress},
+	 proFax=#{proFax},
+	 modifyBy=#{modifyBy},
+	 modifyDate=#{modifyDate}
+	
+	 where id=#{id}
+	</update>
+</mapper>

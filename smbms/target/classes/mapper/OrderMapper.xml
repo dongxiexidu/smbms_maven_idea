@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etrans.dao.OrderMapper">
+	<!-- 根据订单模糊查询订单列表 -->
+	<select id="getOrderList" resultType="com.etrans.domain.Order">
+		select * from smbms_bill where productName like CONCAT("%",#{productName},"%")
+		limit #{pageIndex},#{pageSize};
+	</select>
+	<!-- 获取订单记录数 -->
+	<select id="getOrderCount"  parameterType="String" resultType="Integer">
+		select count(*) from smbms_bill where productName like CONCAT("%",#{productName},"%");
+	</select>
+	<!-- 添加订单 -->
+	<insert id="orderAdd" parameterType="com.etrans.domain.Order">
+		insert into smbms_bill(billCode,productName,productDesc,productUnit,productCount,totalPrice,isPayment)
+		values(#{billCode},#{productName},#{productDesc},#{productUnit},#{productCount},#{totalPrice},#{isPayment})
+	</insert>
+	<!-- 根据订单id删除记录 -->
+	<delete id="deleteOrderById" parameterType="Integer">
+		delete from smbms_bill where id=#{id}
+	</delete>
+	<!-- 根据订单id获取订单信息 -->
+    <select id="getOrderById" parameterType="Integer" resultType="com.etrans.domain.Order">
+  		select * from smbms_bill where id=#{id}
+    </select>
+	<!-- 修改订单信息 -->
+	<update id="modifyOrder" parameterType="com.etrans.domain.Order">
+	 update smbms_bill set billCode=#{billCode},
+	 productName=#{productName},
+	 productDesc =#{productDesc},
+	 productUnit=#{productUnit},
+	 productCount=#{productCount},
+	 totalPrice=#{totalPrice},
+	 isPayment=#{isPayment},
+	 modifyBy=#{modifyBy},
+	 modifyDate=#{modifyDate}
+	
+	 where id=#{id}
+	</update>
+</mapper>
