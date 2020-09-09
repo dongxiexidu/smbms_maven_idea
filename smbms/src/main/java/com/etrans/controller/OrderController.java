@@ -47,28 +47,29 @@ public class OrderController {
 	//获取订单列表的处理方法
 	@RequestMapping("/getOrder")
     public String getOrderList(String orderName,Model md,String pageIndex) {
-    	String strName="";
-    	if(!StringUtils.isEmpty(orderName)) {
+    	String strName = "";
+    	if (!StringUtils.isEmpty(orderName)) {
     		strName=orderName;
     	}
-    	Integer currentPageNo=1;
-    	Integer pageSize=Constants.pageSize;
+    	Integer currentPageNo = 1;
+    	Integer pageSize = Constants.pageSize;
     	if(!StringUtils.isEmpty(pageIndex)) {
     		currentPageNo=Integer.parseInt(pageIndex);
     	}
     	//根据条件获取总记录数
-    	Integer totalCount=orderService.getOrderCount(strName);
+    	Integer totalCount = orderService.getOrderCount(strName);
     	//计算可以分几页
-    	PageHelper pages=new PageHelper();
+    	PageHelper pages = new PageHelper();
     	pages.setCurrentPageNo(currentPageNo);
     	pages.setPageSize(pageSize);
     	pages.setTotalCount(totalCount);
+
     	int totalPageCount = pages.getTotalPageCount();
-    	List<Order> order=orderService.getOrderList(strName,(currentPageNo-1)*pageSize,pageSize);
+    	List<Order> orders = orderService.getOrderList(strName,(currentPageNo-1)*pageSize,pageSize);
     	md.addAttribute("totalPageCount", totalPageCount);
 		md.addAttribute("totalCount", totalCount);
 		md.addAttribute("currentPageNo", currentPageNo);
-    	md.addAttribute("order",order);
+    	md.addAttribute("order",orders);
     	return "orderList";
     }
 	//根据id删除订单信息

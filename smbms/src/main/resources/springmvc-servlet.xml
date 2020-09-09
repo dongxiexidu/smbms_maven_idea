@@ -50,8 +50,6 @@ http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
 			<mvc:mapping path="/**" />
 			<!-- 但是排除下面这些，也就是不拦截请求 -->
 			<mvc:exclude-mapping path="/login" />
-			<mvc:exclude-mapping path="/userLogin" />
-			<mvc:exclude-mapping path="/index" />
 			<mvc:exclude-mapping path="/statics/**" />
 			<mvc:exclude-mapping path="/uploads/**" />
 			<bean class="com.etrans.interceptor.LoginInterceptor"></bean>

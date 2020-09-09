@@ -48,5 +48,5 @@
         </div>
 		
 </body>
-<script type="text/javascript" src="${pageContext.request.contextPath }/statics/js/rollpage.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/statics1/localjs/rollpage.js"></script>
 </html>

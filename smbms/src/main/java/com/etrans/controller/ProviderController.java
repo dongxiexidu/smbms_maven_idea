@@ -44,6 +44,8 @@ public class ProviderController {
 	public String providerAdd() {
 		return "providerAdd";
 	}
+
+	// 列表
 	@RequestMapping("/getProviders")
     public String getProviderList(String proName,Model md,String pageIndex) {
     	String strName="";
@@ -63,7 +65,7 @@ public class ProviderController {
     	pages.setPageSize(pageSize);
     	pages.setTotalCount(totalCount);
     	int totalPageCount = pages.getTotalPageCount();
-    	List<Provider> providers=proService.getProviderList(strName,(currentPageNo-1)*pageSize,pageSize);
+    	List<Provider> providers = proService.getProviderList(strName,(currentPageNo-1)*pageSize,pageSize);
     	md.addAttribute("totalPageCount", totalPageCount);
 		md.addAttribute("totalCount", totalCount);
 		md.addAttribute("currentPageNo", currentPageNo);

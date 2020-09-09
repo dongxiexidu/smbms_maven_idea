@@ -1,13 +1,10 @@
 package com.etrans.service;
 
 import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.etrans.domain.Order;
 
 public interface OrderService{
-	public List<Order> getOrderList(String orderName, Integer pageIndex, Integer pageSize);
+	   public List<Order> getOrderList(String orderName, Integer pageIndex, Integer pageSize);
 	   //根据条件获取订单的记录数
 	   public Integer getOrderCount(String orderName);
 	   //添加订单
