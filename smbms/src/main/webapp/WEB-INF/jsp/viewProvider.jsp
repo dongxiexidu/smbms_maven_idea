@@ -44,7 +44,7 @@
                         </p>
                         
                       	<p class="stdformbutton">
-                        	<button class="submit radius2"><a href="getUserList" class="submit radius2" >返回</a></button>	
+                        	<button class="submit radius2"><a href="/getProviders" class="submit radius2" >返回</a></button>
                         </p>
                     </form>
                     <br />
